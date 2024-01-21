@@ -1,0 +1,57 @@
+@import '../../styles/global.scss';
+
+.signin {
+    position: relative;
+
+    .signin-1 {
+        height: 340px;
+        background-color: $lighter;
+    }
+    .signin-2 {
+        height: 340px;
+        background-color: white;
+    }
+
+    .signin-main {
+        top: 0;
+        right: 0;
+        left: 0;
+        position: absolute;
+        margin: 80px auto;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+
+         a {
+            margin-top: 14px;
+        }
+
+        .signin-button {
+            height: 48px;
+        }
+
+        .slide-signin{
+            background-image: url('../../assets/images/001.png');
+            height: 514px;
+        }
+        
+        .register-with-gg {
+            background-color: $dark-lighter;
+        }
+        .register-with-twitter {
+            background-color: $enoughlight;
+            width: 48px;
+            height: 48px;
+        }
+        .register-with-facebook {
+            background-color: $enoughlight;
+            width: 48px;
+            height: 48px;
+        }
+
+
+    }
+}
+
+
+
