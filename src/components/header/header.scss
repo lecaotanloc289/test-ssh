@@ -1,11 +1,9 @@
 @import '../../styles/global.scss';
 .header {
     margin: 20px auto;
-    display: flex;
-    justify-content: space-between;
     .search input {
         padding: 10px;
-        width: 25rem;
+        width: 15rem;
         background-color: $light-fill-blue;
         border: none;
         border-radius: 4px;
@@ -16,7 +14,13 @@
     .searching .search-button {
         padding: 0!important;
         margin: 0;
-        height: 48px;
+        height: 44px !important;
+        min-width: 44px !important;
+        background-color: $dark-ink;
+        img {
+            width: 16px;
+            height: 16px;
+        }
     }
     
 
@@ -24,11 +28,35 @@
 }
 .header-2 {
     justify-content: space-between;
+    .account {
+        margin: 6px 0;
+
+        img {
+            margin-bottom: -4px;
+            width: 20px;
+        }
+    }
+    .cart-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid $light-fill-indigo; /* Màu và độ dày của đường viền */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        span span {
+            font-size: small;
+        }
+    }
 }
 .search-field {
-    font-size: 20px!important;
-    width: 600px;
-    height: 46px;
+    input {
+        width: 500px;
+        box-sizing: border-box;
+        padding: 0 20px;
+        height: 44px;
+        font-size: 20px;
+    }
 
 }
 .grid {

@@ -9,7 +9,7 @@ export function Copyright() {
     return (
         <Typography variant="subtitle1" className="copyright">
             <Link href="" underline="none" color={'black'}>
-                Elma © Copyright 2020, Inc. All rights reserved
+                Elma © Copyright 2024, Inc. All rights reserved
             </Link>
             {' '}
         </Typography>

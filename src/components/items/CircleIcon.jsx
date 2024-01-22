@@ -1,13 +1,20 @@
 import React from "react";
 import "./CircleIcon.scss";
-const CircleIcon = ({ link }) => {
+const CircleIcon = ({ link, children }) => {
   return (
     <a href="">
       <div className="circle-icon">
-        <img src={link} alt="" />
+        <img className='darkfill-lightest' src={link} alt="" />
+        {children && (
+          <div className="additional-content">
+            {children}
+          </div>
+        )}
       </div>
     </a>
   );
 };
+
+
 
 export default CircleIcon;

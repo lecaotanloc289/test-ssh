@@ -8,16 +8,20 @@ import {
     Button,
     ButtonBase,
     Divider,
+    Link,
     Stack,
     TextField,
 } from '@mui/material'
 import icons from '../../assets/icons'
-import { CardGiftcardOutlined, Search } from '@mui/icons-material'
+import { BadgeOutlined, Search } from '@mui/icons-material'
 import CircleIcon from '../items/CircleIcon'
 import Elma from '../items/Elma'
 import Navbar from './navbar'
 
 export default function Header() {
+    const badge_style = {
+        fontSize: '20px',
+    }
     return (
         <div>
             <Container maxWidth="lg">
@@ -32,26 +36,33 @@ export default function Header() {
 
                     <Stack className="searching" direction={'row'}>
                         <TextField className="search-field"></TextField>
-                        <Button
-                            size="small"
-                            className="search-button"
-                            variant="contained"
-                        >
-                            <Search fontSize="large" />
+                        <Button className="search-button " variant="contained">
+                            <img src={icons.Search} alt="" />
                         </Button>
                     </Stack>
 
-                    <Stack spacing={2} direction={'row'}>
-                        <CircleIcon link={icons.Cart}></CircleIcon>
-                        <CircleIcon link={icons.Love} />
-                        <CircleIcon link={icons.User} />
+                    <Stack spacing={1.5} direction={'row'}>
+                        <Link href=''>
+                            <div className="cart-icon">
+                                <Badge
+                                    className="red"
+                                    badgeContent={4}
+                                    color="error"
+                                    style={badge_style}
+                                >
+                                    <img src={icons.Cart} alt="" />
+                                </Badge>
+                            </div>
+                        </Link>
+                        <CircleIcon link={icons.Love} children={undefined} />
+                        <CircleIcon link={icons.User} children={undefined} />
 
                         <Stack spacing={1}>
-                            <p className="">Join Elma</p>
-                            <span className="">
-                                My Account{' '}
+                            <p className="h7 medium dark-lighter">Join Elma</p>
+                            <p className="account h7 medium black">
+                                My Account
                                 <img src={icons.Chevron_down} alt="" />
-                            </span>
+                            </p>
                         </Stack>
                     </Stack>
                 </Stack>
