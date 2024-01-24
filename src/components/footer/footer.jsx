@@ -8,7 +8,7 @@ import Elma from '../items/Elma'
 export function Copyright() {
     return (
         <Typography variant="subtitle1" className="copyright">
-            <Link href="" underline="none" color={'black'}>
+            <Link href="/" underline="none" color={'black'}>
                 Elma © Copyright 2024, Inc. All rights reserved
             </Link>
             {' '}
@@ -23,7 +23,7 @@ export function Footer1() {
             <Stack className="footer-menu" direction={'row'} spacing={10}>
                 <Stack>
                     <p className='h7 regular'>First Menu</p>
-                    <Link className='h8 regular' href="">Feature</Link>
+                    <Link className='h8 regular' >Feature</Link>
                     <Link className='h8 regular' href="">Enterpise</Link>
                     <Link className='h8 regular' href="">Securiry</Link>
                     <Link className='h8 regular' href="">Customer Stories</Link>
