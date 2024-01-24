@@ -92,6 +92,42 @@ $light-fill-red: #FCEBE8;
     
     --line-height-48px: 64px;
     --line-height-56px: 72px;
+
+    // Colors
+    .primary-color {
+        color: #43467F;
+    } 
+    .blue {
+        color: #006FBB;
+    } 
+    .purpel {
+        color: #9C6ADE;
+    } 
+    .indigo  {
+        color: #5C6AC4;
+    } 
+    .teal {
+        color: #47C1BF;
+    } 
+    .green {
+        color: #50B83C;
+    } 
+    .yellow {
+        color: #EEC200;
+    } 
+    .orange {
+        color: #F49342;
+    } 
+    .red {
+        color: #DE3618;
+    } 
+    .white {
+        color: #ffffff;
+    } 
+    .dark-lightest95 {
+      color: #959EAD;
+    }
+
     --lighter:  #F9FAFB;
     --red: #DE3618;
 
@@ -119,6 +155,11 @@ $light-fill-red: #FCEBE8;
       color: black;
     }
 
+    .normal {
+      text-transform: none;
+
+    }
+  
     .darkfill-lightest {
       color: #919EAB;
     }
@@ -307,7 +348,7 @@ $light-fill-red: #FCEBE8;
 
 /* H3 Styles */
 .h3 {
-  font-family: var(--font-family-rubik-bold);
+  font-family: var(--font-family-rubik);
   font-size: 28px;
   font-weight: 700;
   letter-spacing: 0.20000000298023224px;
@@ -413,8 +454,15 @@ $light-fill-red: #FCEBE8;
 /* H8 Styles */
 .h8 {
   font-family: var(--font-family-rubik-bold);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
+  letter-spacing: 0.15555556118488312px;
+  line-height: 20px;
+}
+
+.h81 {
+  font-family: var(--font-family-rubik-bold);
+  font-size: 14px;
   letter-spacing: 0.15555556118488312px;
   line-height: 20px;
 }
@@ -433,11 +481,10 @@ $light-fill-red: #FCEBE8;
 
 /* H9 Styles */
 .h9 {
-  font-family: var(--font-family-rubik-bold);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1599999964237213px;
-  line-height: 16px;
+    font-family: var(--font-family-rubik-bold);
+    font-size: 12px;
+    letter-spacing: 0.1599999964237213px;
+    line-height: 16px;
 }
 
 .h9.medium {

@@ -1,13 +1,27 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
 
-const Home = () => {
-    return (
-        <>
-            <Link to={'/signin'}>Sign in</Link>
-            <Link to={'/register'}>Register</Link>
-        </>
-    )
+import React from 'react'
+import Banner from './Banner/Banner'
+import Benefit from './Benefit/Benefit'
+import Bestseller from './Bestseller/Bestseller'
+import Flashsale from './Flashsale/Flashsale'
+import Category from './Category/Category'
+import Productlist from './Productlist/Productlist'
+import Blog from './Blog/Blog'
+import Brand from './Brand/Brand'
+
+const home = () => {
+  return (
+    <div>
+        <Banner/>
+        <Benefit/>
+        <Bestseller/>
+        <Flashsale/>
+        <Category/>
+        <Productlist/>
+        <Blog/>
+        <Brand/>
+    </div>
+  )
 }
 
-export default Home
+export default home
