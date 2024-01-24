@@ -1,16 +1,17 @@
 import './App.css'
 import Header from './components/header/Header'
 import Footer from './components/footer/footer'
-import SignIn from './components/signin/SignIn'
+import Home from './components/home/Home'
+
 
 function App() {
     return (
         <>
             <Header />
-            <SignIn/>
+            <Home/>
             <Footer />
         </>
     )
-}
+}   
 
 export default App
