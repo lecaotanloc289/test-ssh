@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from 'react'
 import Banner from './Banner/Banner'
 import Benefit from './Benefit/Benefit'
@@ -24,3 +25,14 @@ const home = () => {
 }
 
 export default home
+=======
+import React from 'react'
+
+const Home = () => {
+  return (
+    <div>Home</div>
+  )
+}
+
+export default Home;
+>>>>>>> 1cce60db2e3282b6e99f202f15bba6b29610cda0

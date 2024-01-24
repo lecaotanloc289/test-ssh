@@ -19,6 +19,12 @@ const icons = {
     Cart: require('./Icon/Cart.png'),
     Love: require('./Icon/Love.png'),
     User: require('./Icon/User.png'),
+
+    Shipping : require('./Icon/Shipping.png'),
+    Money : require('./Icon/Money.png'),
+    CustomerService : require('./Icon/Customer Service.png'),
+    Home : require('./Icon/Home.png'),
+    
     
     
 
