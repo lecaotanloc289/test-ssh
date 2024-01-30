@@ -43,7 +43,7 @@ const Category = () => {
         <Stack className='stack1'>
             <Stack className="name" direction={'row'}>
                 <p className="namecate h2 medium">Category</p>
-                <Button className=' ' variant='outlined' >
+                <Button className=' ' variant='outlined' href='/categories'>
                     <p className='normal h7 medium indigo'>View All</p>
                 </Button>
             </Stack>            

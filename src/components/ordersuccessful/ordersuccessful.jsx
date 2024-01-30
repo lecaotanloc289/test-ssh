@@ -29,7 +29,7 @@ export default  function Ordersuccessful () {
           </Stack>
 
           <Stack className= 'ls' direction={'row'} spacing={2}>
-                <Button className='btn btn1' variant='text'>
+                <Button className='btn btn1' variant='text' href='/'>
                   <ChevronLeftRounded className='icon indigo'/>
                   <p className='normal h7 medium indigo'>Back to shopping</p>
                   </Button>

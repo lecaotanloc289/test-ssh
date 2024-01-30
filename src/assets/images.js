@@ -26,4 +26,7 @@ export const images = {
     Category4: require('./images/Category4.png'),
     Category5: require('./images/Category5.png'),
     Category6: require('./images/Category6.png'),
+    Macbook1: require('./images/Macbook Pro 2018 1.png'),
+    Macbook2: require('./images/Macbook Pro 2018 2.png'),
+    Macbook3: require('./images/Macbook Pro 2018 3.png'),
 }

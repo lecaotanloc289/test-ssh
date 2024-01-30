@@ -24,6 +24,20 @@ const icons = {
     Money : require('./Icon/Money.png'),
     CustomerService : require('./Icon/Customer Service.png'),
     Home : require('./Icon/Home.png'),
+    BestPrices : require('./Icon/Best Prices.png'),
+    Store : require('./Icon/Store.png'),
+    Grid : require('./Icon/Grid.png'),
+    List : require('./Icon/List.png'),
+    Product : require('./Icon/Product.png'),
+    
+    HeadPhones: require('./Icon/Headphones.png'),
+    Computer: require('./Icon/Computer.png'),
+    Camera: require('./Icon/Camera.png'),
+    Healthy: require('./Icon/Healthy.png'),
+    Phone: require('./Icon/Phone.png'),
+    MensFashion: require('./Icon/Mens fashion.png'),
+    Dollar: require('./Icon/Dollar.png'),
+    
     
     
     

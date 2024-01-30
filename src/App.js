@@ -7,6 +7,8 @@ import Register from "./components/register/Register";
 import Categories from "./components/categories/Categories";
 import Home from "./components/home/Home";
 import Ordersuccessful from "./components/ordersuccessful/ordersuccessful";
+import WelcomeBack from "./components/signin/WelcomeBack";
+import Search from "./components/search/Search";
 
 function App() {
   return (
@@ -17,7 +19,10 @@ function App() {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/register" element={<Ordersuccessful />} />
+        <Route path="/ordersuccessful" element={<Ordersuccessful />}/>
+        <Route path="/welcomeback" element={<WelcomeBack/>} />
+        <Route path="/search" element={<Search/>} />
+
       </Routes>
       <Footer />
     </Router>
