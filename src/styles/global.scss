@@ -169,6 +169,10 @@ $light-fill-red: #FCEBE8;
       
     }
 
+    .indigo-background {
+      background-color: $indigo;
+    }
+
     .dark-fill-light-background {
       background-color: $dark-light;
     }
@@ -209,6 +213,14 @@ $light-fill-red: #FCEBE8;
     .light-fill-orange {color: #FEF4EC;}
     .light-fill-red {color: #FCEBE8;}
 
+    .light-fill-blue-background {background-color: #E5EEF4;}
+    .light-fill-purpel-background {background-color: #F5F0FC;}
+    .light-fill-indigo-background  {background-color: #EFF0F9;}
+    .light-fill-teal-background {background-color: #EDF9F9;}
+    .light-fill-green-background {background-color: #EDF8EB;}
+    .light-fill-yellow-background {background-color: #FDF9E5;}
+    .light-fill-orange-background {background-color: #FEF4EC;}
+    .light-fill-red-background {background-color: #FCEBE8;}
     // Border radius
     .radius-4 {
       border-radius: 8px;
@@ -233,7 +245,18 @@ $light-fill-red: #FCEBE8;
     .border-1-solid {
       border: 1px solid $enoughlight;
     }
+    .mg40 {
+      margin: 40px 0;
+    }
 
+    .mg20 {
+      margin: 20px 0;
+    }
+
+    .mg10 {
+      margin: 10px 0;
+    }
+    
     .mgt4 {
       margin-top: 4px;
     }
@@ -242,7 +265,20 @@ $light-fill-red: #FCEBE8;
       margin: 0;
       padding: 0;
     }
+    .check-box {
+      span {
+          font-family: var(--font-family-rubik);
+          font-size: 14px;
+          line-height: 20px;
+          color: $indigo;
+          
+      }
+  
+      .MuiTypography-root {
+        color: $dark-title;
 
+      }
+    }
     // input
     .input {
       box-sizing: border-box;
@@ -268,6 +304,11 @@ $light-fill-red: #FCEBE8;
       background-color: $enoughlight;
     }
 
+    .button-none {
+      border: none;
+      cursor: pointer;
+    }
+
     // Text transform 
     .normal {
       text-transform: none;
@@ -275,6 +316,10 @@ $light-fill-red: #FCEBE8;
 
     .height48 {
       height: 48px;
+    }
+
+    .height80 {
+      height: 80px;
     }
 
     .flex-space-between {
@@ -285,9 +330,12 @@ $light-fill-red: #FCEBE8;
       justify-content: space-around;
     }
     .flex-center {
+      display: flex;
       justify-content: center;
+    }
 
-
+    .center {
+      align-items: center;
     }
 
     .flex {
@@ -503,7 +551,7 @@ $light-fill-red: #FCEBE8;
 /* H8 Styles */
 .h8 {
   font-family: var(--font-family-rubik-bold);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.15555556118488312px;
   line-height: 20px;

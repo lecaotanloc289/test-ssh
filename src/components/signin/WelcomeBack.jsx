@@ -102,7 +102,7 @@ export function Signin() {
         <TextField className="input " type="password"></TextField>
         <div>
           <FormControlLabel
-            className="check-stay-signin"
+            className="check-box"
             control={<Checkbox defaultChecked size="large" />}
             label="Stay signed for a week"
           />

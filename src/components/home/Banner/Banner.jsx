@@ -25,7 +25,7 @@ const Banner = () => {
         </Stack>
 
         <Stack className="stack2" direction={'row'}>
-            <img className='img' with ="372px" src={images.Image} alt="" />
+            <img className='img' width ="372px" src={images.Image} alt="" />
             
         </Stack>
         <Button className='arrow'>

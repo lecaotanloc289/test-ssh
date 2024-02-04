@@ -9,6 +9,8 @@ import Home from "./components/home/Home";
 import Ordersuccessful from "./components/ordersuccessful/ordersuccessful";
 import WelcomeBack from "./components/signin/WelcomeBack";
 import Search from "./components/search/Search";
+import Cart from "./components/cart/Cart";
+import OrderTracking from "./components/order_tracking/OrderTracking";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/ordersuccessful" element={<Ordersuccessful />}/>
         <Route path="/welcomeback" element={<WelcomeBack/>} />
         <Route path="/search" element={<Search/>} />
+        <Route path="/cart" element={<Cart/>} />
+        <Route path="/ordertracking" element={<OrderTracking/>} />
 
       </Routes>
       <Footer />

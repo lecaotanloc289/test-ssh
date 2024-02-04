@@ -1,4 +1,4 @@
-export const images = {
+export  const images = {
     Play_Store: require('./Logo/Store/Play Store.png'),
     App_Store: require('./Logo/Store/App Store.png'),
     Successful : require('./images/Success.png'),

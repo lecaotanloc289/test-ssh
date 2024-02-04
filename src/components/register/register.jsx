@@ -180,9 +180,6 @@ export const RegisterForm = () => {
                             className="input-phonenumber"
                         />
                     </Paper>
-                    {/* 
-                    <TextField className="input" variant="outlined"></TextField>
-                    <TextField className="input" variant="outlined"></TextField> */}
                 </div>
             </Stack>
             <Stack spacing={3} direction={'row'}>
