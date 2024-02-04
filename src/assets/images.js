@@ -29,4 +29,11 @@ export const images = {
     Macbook1: require('./images/Macbook Pro 2018 1.png'),
     Macbook2: require('./images/Macbook Pro 2018 2.png'),
     Macbook3: require('./images/Macbook Pro 2018 3.png'),
+    Cameradetail: require('./images/Cameradetail.png'),
+    Detail2: require('./images/Detail2.png'),
+    Detail3: require('./images/Detail3.png'),
+    Detail1: require('./images/Detail1.png'),
+    Kim: require('./images/Kim.jpg')
+
+
 }

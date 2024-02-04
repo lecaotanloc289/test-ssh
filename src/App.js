@@ -9,14 +9,16 @@ import Home from "./components/home/Home";
 import Ordersuccessful from "./components/ordersuccessful/ordersuccessful";
 import WelcomeBack from "./components/signin/WelcomeBack";
 import Search from "./components/search/Search";
+import ProductDetail from "./components/ProductDetail/ProductDetail";
 
 function App() {
   return (
     <Router>
       <Header />
       <Routes>
+      <Route path="/" element={<ProductDetail />} />
         <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
+        {/* <Route path="/signin" element={<SignIn />} /> */}
         <Route path="/categories" element={<Categories />} />
         <Route path="/register" element={<Register />} />
         <Route path="/ordersuccessful" element={<Ordersuccessful />}/>
