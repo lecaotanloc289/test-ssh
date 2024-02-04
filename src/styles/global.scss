@@ -354,7 +354,12 @@ $light-fill-red: #FCEBE8;
       justify-content: center;
       align-items: center;
     }
-
+    
+    .flexcenter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     .grid-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr); /* Thiết lập 3 cột có độ rộng bằng nhau */
@@ -465,6 +470,15 @@ $light-fill-red: #FCEBE8;
 }
 
 /* H4 Styles */
+
+.h41 {
+  font-family: var(--font-family-rubik);
+  font-size: 16px;
+  letter-spacing: 0.20000000298023224px;
+  line-height: 32px;
+  color: #959EAD;
+}
+
 .h4 {
   font-family: var(--font-family-rubik-bold);
   font-size: 24px;
@@ -509,6 +523,14 @@ $light-fill-red: #FCEBE8;
 /* H6 Styles */
 .h6 {
   font-family: var(--font-family-rubik-bold);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.20000000298023224px;
+  line-height: 20px;
+}
+
+.h61 {
+  font-family: var(--font-family-rubik);
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.20000000298023224px;
@@ -594,6 +616,13 @@ $light-fill-red: #FCEBE8;
   font-family: var(--font-family-rubik);
   font-weight: 400;
   line-height: 16px;
+}
+
+.h22{
+  font-family: var(--font-family-rubik-medium);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 20px;
 }
 
   

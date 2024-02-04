@@ -113,7 +113,7 @@ const Productlist = () => {
                                     <p className="name ">Money Guarantee</p>
                                     <Stack className='pr' spacing={3} direction={'row'}>
                                         <p className="content h8 regular ">$1,725.00</p>
-                                        <Rating className ='rating' name="half-rating" defaultValue={item.Rating} precision={0.5} />
+                                        <Rating name="read-only" className ='rating'  defaultValue={item.Rating} precision={0.5} />
                                     </Stack>
                                 </Stack>
                          </Stack>    
