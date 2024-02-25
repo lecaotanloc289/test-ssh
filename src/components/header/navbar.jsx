@@ -1,8 +1,8 @@
-import React from 'react'
-import './navbar.scss'
-import logo from '../../assets/logo'
-import icons from '../../assets/icons'
-import { Container, Divider } from '@mui/material'
+import React from "react";
+import "./navbar.scss";
+import logo from "../../assets/logo";
+import icons from "../../assets/icons";
+import { Container, Divider } from "@mui/material";
 
 function SocialMedia() {
     return (
@@ -20,23 +20,25 @@ function SocialMedia() {
                 <img src={logo.instagram} alt="" />
             </a>
         </div>
-    )
+    );
 }
 
 function Tools() {
     return (
         <tr className="tools-support">
-            <a href="">
+            <a href="/ordertracking">
                 <p className="h7 regular">Order tracking</p>
             </a>
-            <a href="">
+            <a href="#">
                 <p className="h7 regular">Help</p>
             </a>
-            <img className="image-language" src={logo.US} alt="" />
-            <p className="h7 regular black">English(US)</p>
-            <img src={icons.Chevron_down} alt="" />
+            <div className="flex-row">
+                <img className="image-language" src={logo.US} alt="" />
+                <p className="h7 regular black">English(US)</p>
+                <img src={icons.Chevron_down} alt="" />
+            </div>
         </tr>
-    )
+    );
 }
 
 export default function Navbar() {
@@ -45,5 +47,5 @@ export default function Navbar() {
             <SocialMedia />
             <Tools />
         </div>
-    )
+    );
 }

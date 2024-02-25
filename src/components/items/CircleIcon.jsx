@@ -1,8 +1,9 @@
 import React from "react";
 import "./CircleIcon.scss";
-const CircleIcon = ({ link, children }) => {
+import { Link } from "react-router-dom";
+const CircleIcon = ({ link, children, href }) => {
   return (
-    <a href="">
+    <Link to={href}>
       <div className="circle-icon">
         <img className='darkfill-lightest' src={link} alt="" />
         {children && (
@@ -11,7 +12,7 @@ const CircleIcon = ({ link, children }) => {
           </div>
         )}
       </div>
-    </a>
+    </Link>
   );
 };
 

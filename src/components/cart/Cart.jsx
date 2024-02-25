@@ -17,57 +17,57 @@ import {
     RadioGroup,
     Select,
     Stack,
+    StepButton,
     TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { CartRoute } from "./CartStepper/CartRoute";
 import { images } from "../../assets/images";
 import { formatNumber } from "../search/Search";
 import icons from "../../assets/icons";
 import "./Cart.scss";
 import { RegisterForm } from "../register/Register";
 import logo from "../../assets/logo";
-
-const cart_items = [
+import { Stepper, Step, StepLabel, Box } from "@mui/material";
+const product = [
     {
         product_image: images.Macbook1,
         product_name: "Macbook Pro 2018",
         store_name: "Apple",
         product_type: "Space Grey",
-        product_price: "3500",
-        product_quantity: "2",
+        product_price: 3500,
+        product_quantity: 2,
     },
     {
         product_image: images.Bitmap,
         product_name: "Samsung Galaxy Watch 3",
         store_name: "Samsung",
         product_type: "Mate Black",
-        product_price: "1725",
-        product_quantity: "1",
+        product_price: 1725,
+        product_quantity: 1,
     },
     {
         product_image: images.iphone,
         product_name: "iPhone XS Max Pro",
         store_name: "Apple",
         product_type: "Space Grey, 128 GB",
-        product_price: "1725",
-        product_quantity: "1",
+        product_price: 1725,
+        product_quantity: 1,
     },
     {
         product_image: images.sweat,
         product_name: "Women Yellow Turtleneck",
         store_name: "Stradivarius",
         product_type: "Yellow Pastel",
-        product_price: "1725",
-        product_quantity: "2",
+        product_price: 1725,
+        product_quantity: 2,
     },
     {
         product_image: images.lap,
         product_name: "Beats by Dre C 3450",
         store_name: "Beats",
         product_type: "Navy Blue",
-        product_price: "1725",
-        product_quantity: "1",
+        product_price: 1725,
+        product_quantity: 1,
     },
 ];
 const recommend_product = [
@@ -131,26 +131,78 @@ function CartHeader() {
     );
 }
 
-function CartBody() {
+function CartBody({handleComplete }) {
+    const [cartItems, setCartItems] = useState(product);
+    const [total, setTotal] = useState(0);
+    const [discount, setDiscount] = useState(0);
     // Thêm state productQuantities
     const [productQuantities, setProductQuantities] = useState(
-        cart_items.map((item) => parseInt(item.product_quantity, 10)),
+        product.map((item) => item.product_quantity),
     );
 
     // Hàm xử lý tăng giảm giá trị
     const handleQuantityChange = (index, amount) => {
         const newQuantities = [...productQuantities];
         newQuantities[index] += amount;
-        if (newQuantities[index] < 0) {
-            newQuantities[index] = 0;
+        if (newQuantities[index] < 1) {
+            newQuantities[index] = 1;
         }
         setProductQuantities(newQuantities);
-
-        // Cập nhật giá trị mới vào cart_items
-        // const newCartItems = [...cart_items];
-        // newCartItems[index].product_quantity = newQuantities[index].toString();
-        // setCartItems(newCartItems);
+        const updateCartItem = product.map((item, i) => {
+            if (i === index) {
+                return {
+                    ...item,
+                    product_quantity: newQuantities[index],
+                };
+            }
+            return item;
+        });
+        setCartItems(updateCartItem);
+        const totalPrice = updateCartItem.reduce((sum, item, i) => {
+            if (checkState[i] === true) {
+                return sum + item.product_price * item.product_quantity;
+            }
+            return sum;
+        }, 0);
+        setTotal(totalPrice);
     };
+    // Check tất cả các sản phẩm | không
+    const [selectAll, setSelectAll] = useState(false);
+
+    // Multiple checkbox
+    const [checkState, setCheckState] = useState(
+        new Array(product.length).fill(false),
+    );
+
+    const handleOnChange = (position) => {
+        setDiscount(10);
+
+        const updateCheckState = checkState.map((item, index) => {
+            return index === position ? !item : item;
+        });
+        setCheckState(updateCheckState);
+        const totalPrice = updateCheckState.reduce(
+            (sum, currentState, index) => {
+                if (currentState === true)
+                    return (
+                        sum +
+                        product[index].product_price *
+                            product[index].product_quantity
+                    );
+                return sum;
+            },
+            0,
+        );
+        setTotal(totalPrice);
+    };
+
+    const handleSelectAll = (e) => {
+        const checked = e.target.checked;
+        // console.log(checked);
+        if (checked) setSelectAll(!selectAll);
+        else setSelectAll(false);
+    };
+
     return (
         <Container maxWidth="lg">
             <Stack direction={"row"} className="flex-space-between">
@@ -158,15 +210,25 @@ function CartBody() {
                     <div>
                         <FormControlLabel
                             className="check-box"
-                            control={<Checkbox defaultChecked size="large" />}
+                            control={
+                                <Checkbox
+                                    onChange={handleSelectAll}
+                                    id="selectAll"
+                                    size="large"
+                                />
+                            }
                             label="Select all"
                         />
                     </div>
-                    {cart_items.map((i, index) => (
+                    {product.map((i, index) => (
                         <div className="cart-product">
                             <Grid container spacing={2} className="center">
                                 <Grid className="flex-row" xs={3}>
-                                    <Checkbox size="large" />
+                                    <Checkbox
+                                        size="large"
+                                        checked={checkState[index]}
+                                        onChange={() => handleOnChange(index)}
+                                    />
                                     <div className="image-container center">
                                         <img
                                             width={120}
@@ -226,54 +288,6 @@ function CartBody() {
                                     </IconButton>
                                 </Grid>
                             </Grid>
-                            {/* <Stack
-                                spacing={5}
-                                className="center"
-                                direction={"row"}
-                            >
-                                <Checkbox size="large" />
-                                <div className="center">
-                                    <img
-                                        width={120}
-                                        className="product-image"
-                                        src={i.product_image}
-                                        alt=""
-                                    />
-                                </div>
-                                <div>
-                                    <p className="h7 medium dark-title">
-                                        {i.product_name}
-                                    </p>
-                                    <p className="h8 regular dark-lightest95">
-                                        {i.store_name}, {i.product_type}
-                                    </p>
-                                </div>
-                                <p
-                                    style={{ lineHeight: "32px" }}
-                                    className="h7 medium green product-price"
-                                >
-                                    {"$" +
-                                        formatNumber(
-                                            i.product_price,
-                                            "en-US",
-                                            2,
-                                        )}
-                                </p>
-                                <Stack spacing={1} direction={"row"}>
-                                    <IconButton>
-                                        <img src={icons.Minus} alt="" />
-                                    </IconButton>
-                                    <p className="h8 medium dark-title product-quantity">
-                                        {i.product_quantity}
-                                    </p>
-                                    <IconButton>
-                                        <img src={icons.Add} alt="" />
-                                    </IconButton>
-                                </Stack>
-                                <IconButton className="delete-product">
-                                    <img src={icons.Trash} alt="" />
-                                </IconButton>
-                            </Stack> */}
                         </div>
                     ))}
                 </Stack>
@@ -300,15 +314,20 @@ function CartBody() {
                                     Price
                                 </p>
                                 <p className="h7 regular dark-title">
-                                    {"$" + formatNumber(1725, "en-US", 2)}
+                                    {"$" + formatNumber(total, "en-US", 2)}
                                 </p>
                             </div>
                             <div className="flex-space-between">
                                 <p className="h7 regular dark-lightest95">
-                                    Discount {}%
+                                    Discount {discount}%
                                 </p>
                                 <p className="h7 regular red">
-                                    {"- $" + formatNumber(172.5, "en-US", 2)}
+                                    {"- $" +
+                                        formatNumber(
+                                            (total * discount) / 100,
+                                            "en-US",
+                                            2,
+                                        )}
                                 </p>
                             </div>
                             <div className="flex-space-between">
@@ -316,7 +335,12 @@ function CartBody() {
                                     Total Price
                                 </p>
                                 <p className="h7 bold dark-title">
-                                    {"$" + formatNumber(1725, "en-US", 2)}
+                                    {"$" +
+                                        formatNumber(
+                                            total * (1 - discount / 100),
+                                            "en-US",
+                                            2,
+                                        )}
                                 </p>
                             </div>
                         </Stack>
@@ -326,17 +350,18 @@ function CartBody() {
                                 Write a note
                             </p>
                         </div>
-                        <textarea className="input height80"></textarea>
-                        {/* <TextField
+                        {/* <textarea className="input height80"></textarea> */}
+                        <TextField
                             multiline
-                            // maxRows={4}
+                            maxRows={4}
                             className="input"
                             placeholder="Fragile item, Electronics etc"
-                        ></TextField> */}
+                        ></TextField>
                         <Button
                             variant="contained"
                             className="button-contained"
                             style={{ marginTop: "100px" }}
+                            onClick={handleComplete}
                         >
                             <img
                                 style={{ width: "20px", margin: "4px" }}
@@ -350,13 +375,7 @@ function CartBody() {
                     </Stack>
                 </div>
             </Stack>
-        </Container>
-    );
-}
-
-function CartFooter() {
-    return (
-        <div className="mg40">
+            <div className="mg40">
             <div className="flex-space-between center">
                 <p className="h4 medium dark-title">Maybe you like it too...</p>
                 <Button variant="outlined" className="button-outlined">
@@ -392,125 +411,127 @@ function CartFooter() {
                     </Stack>
                 ))}
             </Stack>
-        </div>
+            </div>
+        </Container>
     );
 }
+
+
 
 function Cart() {
     return (
         <Container maxWidth="lg">
             <CartHeader />
             <CartRoute />
-            <CartBody />
-            <CartFooter />
-            <CartCustomerInfo />
-            <ShippingPayment />
-            <Review />
         </Container>
     );
 }
 
 export default Cart;
 
-function CartCustomerInfo() {
+function CartCustomerInfo({ handleBack, handleComplete }) {
     return (
-        <Stack spacing={3}>
-            <p className="h5 medium dark-title">Add Customer data</p>
-            <Stack spacing={6} direction={"row"}>
-                <div>
-                    <p className="h8 regular dark-title">First name</p>
-                    <TextField
-                        className="input firstname"
-                        variant="outlined"
-                        placeholder="Your first name"
-                    ></TextField>
-                </div>
-                <div>
-                    <p className="h8 regular dark-lighter5a">Last name</p>
-                    <TextField
-                        className="input firstname"
-                        variant="outlined"
-                        placeholder="Your last name"
-                    ></TextField>
-                </div>
-            </Stack>
-            <Stack spacing={6} direction={"row"}>
-                <div>
-                    <p className="h8 regular dark-title">Your Email</p>
-                    <TextField
-                        type="email"
-                        placeholder="example@gmail.com"
-                        className="input email firstname"
-                        variant="outlined"
-                    ></TextField>
-                </div>
-                <Stack spacing={2} direction={"row"}>
+        <div className="flex-space-between">
+            <Stack spacing={3}>
+                <p className="h5 medium dark-title">Add Customer data</p>
+                <Stack spacing={6} direction={"row"}>
                     <div>
-                        <p className="h8 regular dark-title">Phone number</p>
-                        <Paper
-                            className="phonenumber input non-box-shadown"
-                            component={"form"}
-                            sx={{ display: "flex", alignItems: "center" }}
-                        >
-                            <p className="h8 regular prefix-phone">+84</p>
-                            <Divider
-                                sx={{ height: 28, m: 0.5 }}
-                                orientation="vertical"
-                            />
-                            <InputBase
-                                placeholder="000 000 000"
-                                className="input-phonenumber firstname"
-                            />
-                        </Paper>
+                        <p className="h8 regular dark-title">First name</p>
+                        <TextField
+                            className="input firstname"
+                            variant="outlined"
+                            placeholder="Your first name"
+                        ></TextField>
+                    </div>
+                    <div>
+                        <p className="h8 regular dark-lighter5a">Last name</p>
+                        <TextField
+                            className="input firstname"
+                            variant="outlined"
+                            placeholder="Your last name"
+                        ></TextField>
                     </div>
                 </Stack>
+                <Stack spacing={6} direction={"row"}>
+                    <div>
+                        <p className="h8 regular dark-title">Your Email</p>
+                        <TextField
+                            type="email"
+                            placeholder="example@gmail.com"
+                            className="input email firstname"
+                            variant="outlined"
+                        ></TextField>
+                    </div>
+                    <Stack spacing={2} direction={"row"}>
+                        <div>
+                            <p className="h8 regular dark-title">Phone number</p>
+                            <Paper
+                                className="phonenumber input non-box-shadown"
+                                component={"form"}
+                                sx={{ display: "flex", alignItems: "center" }}
+                            >
+                                <p className="h8 regular prefix-phone">+84</p>
+                                <Divider
+                                    sx={{ height: 28, m: 0.5 }}
+                                    orientation="vertical"
+                                />
+                                <InputBase
+                                    placeholder="000 000 000"
+                                    className="input-phonenumber firstname"
+                                />
+                            </Paper>
+                        </div>
+                    </Stack>
+                </Stack>
+                <Stack spacing={6} direction={"row"}>
+                    <div>
+                        <p className="h8 regular dark-title">Country</p>
+                        <TextField
+                            className="input firstname"
+                            variant="outlined"
+                            placeholder="Viet Nam"
+                        ></TextField>
+                    </div>
+                    <div>
+                        <p className="h8 regular dark-lighter5a">City</p>
+                        <TextField
+                            className="input city"
+                            variant="outlined"
+                            placeholder="HCM"
+                        ></TextField>
+                    </div>
+                    <div>
+                        <p className="h8 regular dark-lighter5a">ZIP Code</p>
+                        <TextField
+                            className="input zip-code"
+                            placeholder="123456"
+                            variant="outlined"
+                        ></TextField>
+                    </div>
+                </Stack>
+                <div>
+                    <p className="h8 regular dark-lighter5a">Address details</p>
+                    <TextField
+                        className="input firstname address"
+                        variant="outlined"
+                        placeholder="38 C1 Street Tan Binh"
+                    ></TextField>
+                </div>
+                <div>
+                    <FormControlLabel
+                        className="check-box"
+                        control={<Checkbox defaultChecked size="large" />}
+                        label="Save this new address in Elma E-commerce"
+                    />
+                </div>
             </Stack>
-            <Stack spacing={6} direction={"row"}>
-                <div>
-                    <p className="h8 regular dark-title">Country</p>
-                    <TextField
-                        className="input firstname"
-                        variant="outlined"
-                        placeholder="Viet Nam"
-                    ></TextField>
-                </div>
-                <div>
-                    <p className="h8 regular dark-lighter5a">City</p>
-                    <TextField
-                        className="input city"
-                        variant="outlined"
-                        placeholder="HCM"
-                    ></TextField>
-                </div>
-                <div>
-                    <p className="h8 regular dark-lighter5a">ZIP Code</p>
-                    <TextField
-                        className="input zip-code"
-                        placeholder="123456"
-                        variant="outlined"
-                    ></TextField>
-                </div>
-            </Stack>
-            <div>
-                <p className="h8 regular dark-lighter5a">Address details</p>
-                <TextField
-                    className="input firstname address"
-                    variant="outlined"
-                    placeholder="38 C1 Street Tan Binh"
-                ></TextField>
-            </div>
-            <div>
-                <FormControlLabel
-                    className="check-box"
-                    control={<Checkbox defaultChecked size="large" />}
-                    label="Save this new address in Elma E-commerce"
-                />
-            </div>
-        </Stack>
+            <OrderSummary handleBack={handleBack} handleComplete={handleComplete}/>
+        </div>
+        
     );
 }
 
-function ShippingPayment() {
+function ShippingPayment({ handleBack, handleComplete }) {
     const shipping = [
         {
             brand: "DHL Express",
@@ -755,7 +776,7 @@ function ShippingPayment() {
     );
 }
 
-function Review() {
+function Review({ handleBack, handleComplete }) {
     const info = [
         {
             avatar: "",
@@ -922,7 +943,7 @@ function Review() {
 {
     /* Order Summary */
 }
-export function OrderSummary() {
+export function OrderSummary({ handleBack, handleComplete }) {
     return (
         <Stack spacing={2}>
             <div className="">
@@ -998,17 +1019,119 @@ export function OrderSummary() {
                             </p>
                         </div>
                     </Stack>
-                    <Button variant="contained" className="button-contained">
+                    <Button onClick={handleComplete} variant="contained" className="button-contained">
                         <img src={icons.Shipping_white} alt="" />
                         <p className="normal h7 medium white">
                             Continue to Shipping
                         </p>
                     </Button>
-                    <Button variant="outlined" className="button-outlined">
+                    <Button onClick={handleBack} variant="outlined" className="button-outlined">
                         <img src={icons.Arror_left} alt="" />
                     </Button>
                 </Stack>
             </div>
         </Stack>
+    );
+}
+
+export function CartRoute() {
+    const steps = [
+        { 
+            label: "Cart", 
+            component: (<CartBody handleComplete={() => handleComplete()} />) },
+        {
+            label: "Customer Information",
+            component: (
+                <CartCustomerInfo
+                    handleBack={() => handleBack()}
+                    handleComplete={() => handleComplete()}
+                />
+            ),
+        },
+        {
+            label: "Shipping & Payment",
+            component: (
+                <ShippingPayment
+                    handleBack={() => handleBack()}
+                    handleComplete={() => handleComplete()}
+                />
+            ),
+        },
+        {
+            label: "Review",
+            component: (
+                <Review
+                    handleBack={() => handleBack()}
+                    handleComplete={() => handleComplete()}
+                />
+            ),
+        },
+    ];
+
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [completed, setCompleted] = React.useState({});
+
+    const totalSteps = () => {
+        return steps.length;
+    };
+
+    const completedSteps = () => {
+        return Object.keys(completed).length;
+    };
+
+    const isLastStep = () => {
+        return activeStep === totalSteps() - 1;
+    };
+
+    const allStepCompleted = () => {
+        return completedSteps() === totalSteps();
+    };
+
+    const handleNext = () => {
+        const newActiveStep =
+            isLastStep() && !allStepCompleted()
+                ? steps.findIndex((step, i) => !(i in completed))
+                : activeStep + 1;
+        setActiveStep(newActiveStep);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleStep = (step: number) => () => {
+        setActiveStep(step);
+    };
+
+    const handleComplete = () => {
+        const newCompleted = completed;
+        newCompleted[activeStep] = true;
+        setCompleted(newCompleted);
+        handleNext();
+        console.log('Next');
+        
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+        setCompleted({});
+    };
+
+    return (
+        <Box className="cartRoute1" >
+            <Stepper className="cartRoute2" nonLinear activeStep={activeStep}>
+                {steps.map((step, index) => (
+                    <Step className="cartRoute3" completed={completed[index]}>
+                        <StepButton
+                            className="cartRoute4"
+                            onClick={handleStep(index)}
+                        >
+                            {step.label}
+                        </StepButton>
+                    </Step>
+                ))}
+            </Stepper>
+            <Box>{steps[activeStep].component}</Box>
+        </Box>
     );
 }

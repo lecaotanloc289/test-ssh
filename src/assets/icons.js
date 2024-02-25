@@ -40,6 +40,8 @@ const icons = {
     Camera: require("./Icon/Camera.png"),
     Healthy: require("./Icon/Healthy.png"),
     Phone: require("./Icon/Phone.png"),
+    Flash: require("./Icon/Flash.png"),
+    
     MensFashion: require("./Icon/Mens fashion.png"),
     Dollar: require("./Icon/Dollar.png"),
     Trash: require("./Icon/Trash.png"),

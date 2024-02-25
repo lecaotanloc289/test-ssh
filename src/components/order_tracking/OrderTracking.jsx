@@ -96,7 +96,7 @@ function OrderTrackingHeader() {
             <div>
                 <p className="h2 medium dark-title ">Order Tracking</p>
             </div>
-            <Button className="button-outlined" variant="outlined">
+            <Button href="/" className="button-outlined" variant="outlined">
                 <img height={20} src={icons.Home} alt="" />
                 <p className="normal h7 medium indigo">Go to Homepage</p>
             </Button>

@@ -6,17 +6,24 @@
 .register-2 {
     .email {
         min-width: 290px;
+        width: 350px;
     }
     .firstname {
         min-width: 230px;
     }
-    .gender {
-       width:  170px;
-       height: 48px;
-       font-size: 14px;
+    select.gender.input {
+        border: 1px solid darkgray;
+        font-size: 16px;
+        height: 48px;
+        width: 170px;
+        padding-left: 14px;
+    }
+    select.gender.input:focus-visible {
+        border: 1px solid darkgray;
+
     }
     .phonenumber {
-        width: 480px;
+        width: 544px;
         height: 48px;
         box-shadow: none;
         border: 1px solid darkgray;
@@ -25,6 +32,8 @@
         margin: 0 8px;
     }
     .input-phonenumber {
+        width: 490px;
+        height: 48px;
         font-size: 16px;
         font-family: 'Rubik-Regular';
 
@@ -36,7 +45,11 @@
         padding: 0 42px;
     }
     .btn-group {
+        width: 544px;
         margin: 40px 0;
+        .create-account {
+            width: 500px;
+        }
     }
 }
 
