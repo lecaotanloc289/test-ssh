@@ -20,12 +20,11 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import "./OrderTracking.scss";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
-import { OrderSummary } from "../cart/Cart";
-import { formatNumber } from "../search/Search";
 import { images } from "../../assets/images";
+import { formattedNumber } from "../../utils/appService";
+import MainLayout from "../MainLayout";
 const steps = ["Order payed", "Packed", "On shipping", "Received", "Review"];
 const recommend_product = [
     {
@@ -80,13 +79,15 @@ export function OrderTrackingStepper() {
 }
 function OrderTracking() {
     return (
-        <Container maxWidth="lg">
-            <OrderTrackingHeader />
-            <Container className="flex-space-between">
-                <YourPackageIn />
-                <InsidePackage />
+        <MainLayout>
+            <Container maxWidth="lg">
+                <OrderTrackingHeader />
+                <Container className="flex-space-between">
+                    <YourPackageIn />
+                    <InsidePackage />
+                </Container>
             </Container>
-        </Container>
+        </MainLayout>
     );
 }
 
@@ -238,12 +239,7 @@ function InsidePackage() {
                                 </p>
                                 <div className="flex-space-between flex-row">
                                     <p className="green h8 regular">
-                                        {"$" +
-                                            formatNumber(
-                                                item.price,
-                                                "en-US",
-                                                2,
-                                            )}
+                                        {formattedNumber(item.price)}
                                     </p>
                                     <div className="flex-row">
                                         <p className="dark-lighter5a h8 regular">
@@ -260,7 +256,7 @@ function InsidePackage() {
                                 Subtotal
                             </p>
                             <p className="h7 regular dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
@@ -268,13 +264,13 @@ function InsidePackage() {
                                 Shipping
                             </p>
                             <p className="h7 regular dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
                             <p className="h7 regular dark-lightest95">Tax 8%</p>
                             <p className="h7 regular dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
@@ -282,13 +278,13 @@ function InsidePackage() {
                                 Discount 10%
                             </p>
                             <p className="h7 regular red">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
                             <p className="h7 medium dark-title">Order Total</p>
                             <p className="h7 medium dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                     </Stack>

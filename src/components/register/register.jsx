@@ -16,16 +16,20 @@ import logo from "../../assets/logo";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../redux/actions/registerAction";
+import MainLayout from "../MainLayout";
 
 const Register = () => {
     return (
-        <Container className="register-main" maxWidth="lg">
+        <MainLayout>
+            <Container className="register-main" maxWidth="lg">
             <Container className="register flex-space-between">
                 <Infor />
                 <RegisterForm />
             </Container>
             <LeadingBrand />
-        </Container>
+            </Container>
+        </MainLayout>
+        
     );
 };
 

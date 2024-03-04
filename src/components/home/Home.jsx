@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Banner from "./Banner/Banner";
 import Benefit from "./Benefit/Benefit";
 import Bestseller from "./Bestseller/Bestseller";
@@ -7,10 +7,12 @@ import Category from "./Category/Category";
 import Productlist from "./Productlist/Productlist";
 import Blog from "./Blog/Blog";
 import Brand from "./Brand/Brand";
+import MainLayout from "../MainLayout";
 
-const home = () => {
+const Home = () => {
+    
     return (
-        <div>
+        <MainLayout>
             <Banner />
             <Benefit />
             <Bestseller />
@@ -19,8 +21,8 @@ const home = () => {
             <Productlist />
             <Blog />
             <Brand />
-        </div>
+        </MainLayout>
     );
 };
 
-export default home;
+export default Home;

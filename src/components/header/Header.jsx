@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/logo";
 import "./header.scss";
 import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
 import {
     Badge,
     Button,
-    ButtonBase,
     Divider,
     Link,
     Menu,
@@ -15,41 +12,20 @@ import {
     TextField,
 } from "@mui/material";
 import icons from "../../assets/icons";
-import { BadgeOutlined, Search } from "@mui/icons-material";
 import CircleIcon from "../items/CircleIcon";
 import Elma from "../items/Elma";
 import Navbar from "./navbar";
-import { getUserInfoSuccess, signOut } from "../../redux/actions/userAction";
-import { getUserInfo } from "../../utils/appService";
+import { signOut } from "../../redux/actions/userAction";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSearchResults } from "../../redux/actions/searchAcion";
+import { fetchSearchResults } from "../../redux/actions/actions";
+import { useNavigate } from "react-router-dom";
 export default function Header() {
     const badge_style = {
         fontSize: "20px",
     };
+    const navigate = useNavigate();
     // STATE SIGNIN
-    const [isSignIn, setIsSignIn] = useState(false);
-    const [username, setUsername] = useState("");
-    const isAuthenticated = localStorage.getItem("isAuthenticated");
-
-    useEffect(() => {
-        var userData = JSON.parse(localStorage.getItem("userData"));
-        if (userData && isAuthenticated === "true") {
-            getUserInfo(userData.id)
-                .then((userInfo) => {
-                    setUsername(userInfo.name);
-                    // console.log(userInfo);
-
-                    getUserInfoSuccess(userInfo);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        }
-        if (isAuthenticated === "true") {
-            setIsSignIn(true);
-        } else setIsSignIn(false);
-    }, []);
+    const auth = useSelector((state) => state.auth);
 
     const handleSignOut = () => {
         signOut();
@@ -69,7 +45,6 @@ export default function Header() {
     // getting search value
     const [search, setSearchTerm] = useState("");
     const [cartItems, setCartItems] = useState(0);
-    // searching and fetch data
     // render data at search component
     const dispatch = useDispatch();
     // const searchTerm = useSelector((state) => state.search.searchTerm);
@@ -79,12 +54,20 @@ export default function Header() {
     useEffect(() => {
         dispatch(fetchSearchResults(localStorage.getItem("searchValue")));
     }, [dispatch, localStorage.getItem("searchValue")]);
+
+    // Search button
     const handleSearch = (e) => {
-        // dispatch(setSearchTerm(search));
         if (search === "") console.log(search);
-        // Gọi hàm xử lý tìm kiếm với giá trị searchTerm
         else window.location.href = `/search?key=${search}`;
     };
+
+    // get cart quantity
+    const cart = useSelector((state) => state.cart);
+    let quantity;
+    if (cart && cart.products) {
+        quantity = cart.products.length;
+    }
+
     return (
         <div>
             <Container maxWidth="lg">
@@ -112,33 +95,38 @@ export default function Header() {
                     </Stack>
 
                     <Stack spacing={1.5} direction={"row"}>
-                        <Link href="/cart">
+                        <a
+                            style={{ cursor: "pointer" }}
+                            onClick={() => navigate("/cart")}
+                        >
                             <div className="cart-icon">
                                 <Badge
                                     className="red"
-                                    badgeContent={cartItems}
+                                    badgeContent={quantity > 0 ? quantity : 0}
                                     color="error"
                                     style={badge_style}
                                 >
                                     <img src={icons.Cart} alt="" />
                                 </Badge>
                             </div>
-                        </Link>
-                        <CircleIcon
-                            href={"/love"}
-                            link={icons.Love}
-                            children=""
-                        />
-                        <CircleIcon
-                            href={"/user"}
-                            link={icons.User}
-                            children=""
-                        />
+                        </a>
+                        <a
+                            style={{ cursor: "pointer" }}
+                            onClick={() => navigate("/favorite")}
+                        >
+                            <CircleIcon link={icons.Love} children="" />
+                        </a>
+                        <a
+                            style={{ cursor: "pointer" }}
+                            onClick={() => navigate("/user")}
+                        >
+                            <CircleIcon link={icons.User} children="" />
+                        </a>
                         <Stack className="center" spacing={1}>
-                            {isSignIn ? (
+                            {auth.isAuthenticated ? (
                                 <div>
                                     <p className="h7 medium dark-lighter">
-                                        {username}
+                                        {auth.userData.name}
                                     </p>
                                     <a className="normal" onClick={handleClick}>
                                         <p className="account h7 medium black">

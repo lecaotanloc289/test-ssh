@@ -12,6 +12,7 @@ import React from "react";
 import icons from "../../assets/icons";
 import "./WelcomeBack.scss";
 import { LeadingBrand } from "../register/Register";
+import MainLayout from "../MainLayout";
 
 const benefits = [
   {
@@ -38,7 +39,7 @@ const benefits = [
 
 export default function WelcomeBack() {
   return (
-    <>
+    <MainLayout>
       <Container className="welcome-back flex-row space-around" maxWidth={"lg"}>
         <Benefits />
         <Signin />
@@ -48,7 +49,7 @@ export default function WelcomeBack() {
       </div>
       
       
-    </>
+    </MainLayout>
   );
 }
 

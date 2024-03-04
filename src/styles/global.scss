@@ -279,6 +279,21 @@ $light-fill-red: #FCEBE8;
 
       }
     }
+    // text
+    .text-ellipsis {
+      white-space: nowrap;     /* Ngăn chặn quấn văn bản vào hàng mới */
+      overflow: hidden;        /* Ẩn phần văn bản bị tràn */
+      text-overflow: ellipsis; /* Hiển thị dấu elipsis (...) */
+      max-width: 160px;        /* Đặt chiều rộng tối đa của phần tử */
+    }
+
+    .textwrap2line {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2; /* Số dòng tối đa bạn muốn hiển thị */
+    }
+    
     // input
     .input {
       box-sizing: border-box;

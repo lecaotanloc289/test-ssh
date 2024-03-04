@@ -1,13 +1,17 @@
-import { ChevronLeftRounded, Edit, Star } from "@mui/icons-material";
+import { ChevronLeftRounded, Star } from "@mui/icons-material";
 import {
     Avatar,
     Button,
     Checkbox,
     Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider,
     FormControl,
     FormControlLabel,
-    FormLabel,
     Grid,
     IconButton,
     InputBase,
@@ -20,56 +24,17 @@ import {
     StepButton,
     TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { images } from "../../assets/images";
-import { formatNumber } from "../search/Search";
 import icons from "../../assets/icons";
 import "./Cart.scss";
-import { RegisterForm } from "../register/Register";
 import logo from "../../assets/logo";
 import { Stepper, Step, StepLabel, Box } from "@mui/material";
-const product = [
-    {
-        product_image: images.Macbook1,
-        product_name: "Macbook Pro 2018",
-        store_name: "Apple",
-        product_type: "Space Grey",
-        product_price: 3500,
-        product_quantity: 2,
-    },
-    {
-        product_image: images.Bitmap,
-        product_name: "Samsung Galaxy Watch 3",
-        store_name: "Samsung",
-        product_type: "Mate Black",
-        product_price: 1725,
-        product_quantity: 1,
-    },
-    {
-        product_image: images.iphone,
-        product_name: "iPhone XS Max Pro",
-        store_name: "Apple",
-        product_type: "Space Grey, 128 GB",
-        product_price: 1725,
-        product_quantity: 1,
-    },
-    {
-        product_image: images.sweat,
-        product_name: "Women Yellow Turtleneck",
-        store_name: "Stradivarius",
-        product_type: "Yellow Pastel",
-        product_price: 1725,
-        product_quantity: 2,
-    },
-    {
-        product_image: images.lap,
-        product_name: "Beats by Dre C 3450",
-        store_name: "Beats",
-        product_type: "Navy Blue",
-        product_price: 1725,
-        product_quantity: 1,
-    },
-];
+import { formattedNumber } from "../../utils/appService";
+import MainLayout from "../MainLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { decreaseQuantity, fetchCart, increaseQuantity, removeFromCart } from "../../redux/actions/cartAction";
+
 const recommend_product = [
     {
         image: images.clock,
@@ -108,6 +73,19 @@ const recommend_product = [
         rate: 4.6,
     },
 ];
+
+export default function Cart() {
+    return (
+        <MainLayout>
+            <Container maxWidth="lg">
+                <CartHeader />
+                <CartRoute />
+            </Container>
+        </MainLayout>
+        
+    );
+}
+
 function CartHeader() {
     return (
         <Stack
@@ -131,109 +109,187 @@ function CartHeader() {
     );
 }
 
+export function CartRoute() {
+    const steps = [
+        { 
+            label: "Cart", 
+            component: (<CartBody handleComplete={() => handleComplete()} />) },
+        {
+            label: "Customer Information",
+            component: (
+                <CartCustomerInfo
+                    handleBack={() => handleBack()}
+                    handleComplete={() => handleComplete()}
+                />
+            ),
+        },
+        {
+            label: "Shipping & Payment",
+            component: (
+                <ShippingPayment
+                    handleBack={() => handleBack()}
+                    handleComplete={() => handleComplete()}
+                />
+            ),
+        },
+        {
+            label: "Review",
+            component: (
+                <Review
+                    handleBack={() => handleBack()}
+                    handleComplete={() => handleComplete()}
+                />
+            ),
+        },
+    ];
+
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [completed, setCompleted] = React.useState({});
+
+    const totalSteps = () => {
+        return steps.length;
+    };
+
+    const completedSteps = () => {
+        return Object.keys(completed).length;
+    };
+
+    const isLastStep = () => {
+        return activeStep === totalSteps() - 1;
+    };
+
+    const allStepCompleted = () => {
+        return completedSteps() === totalSteps();
+    };
+
+    const handleNext = () => {
+        const newActiveStep =
+            isLastStep() && !allStepCompleted()
+                ? steps.findIndex((step, i) => !(i in completed))
+                : activeStep + 1;
+        setActiveStep(newActiveStep);
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleStep = (step: number) => () => {
+        setActiveStep(step);
+    };
+
+    const handleComplete = () => {
+        const newCompleted = completed;
+        newCompleted[activeStep] = true;
+        setCompleted(newCompleted);
+        handleNext();
+        console.log('Next');
+        
+    };
+
+    const handleReset = () => {
+        setActiveStep(0);
+        setCompleted({});
+    };
+
+    return (
+        <Box className="cartRoute1" >
+            <Stepper className="cartRoute2" nonLinear activeStep={activeStep}>
+                {steps.map((step, index) => (
+                    <Step className="cartRoute3" completed={completed[index]}>
+                        <StepButton
+                            className="cartRoute4"
+                            onClick={handleStep(index)}
+                        >
+                            {step.label}
+                        </StepButton>
+                    </Step>
+                ))}
+            </Stepper>
+            <Box>{steps[activeStep].component}</Box>
+        </Box>
+    );
+}
+
 function CartBody({handleComplete }) {
-    const [cartItems, setCartItems] = useState(product);
+    const dispatch = useDispatch()
+    
+    // get user data from store
+    const userData = useSelector((state) => state.auth.userData)
+
+    // get cart item from store
+    const cart = useSelector((state) => state.cart)
+    let products = [];
+    let userId;
+
+    if(cart) {
+        products = cart.products
+    }
+
+    if(userData) userId = userData.id
+
     const [total, setTotal] = useState(0);
     const [discount, setDiscount] = useState(0);
-    // Thêm state productQuantities
-    const [productQuantities, setProductQuantities] = useState(
-        product.map((item) => item.product_quantity),
-    );
-
-    // Hàm xử lý tăng giảm giá trị
-    const handleQuantityChange = (index, amount) => {
-        const newQuantities = [...productQuantities];
-        newQuantities[index] += amount;
-        if (newQuantities[index] < 1) {
-            newQuantities[index] = 1;
+    // handle increase quantity & decrease quantity
+    const handleIncrease = async (productId) => {
+        const product = {
+            userId: userId,
+            productId: productId
         }
-        setProductQuantities(newQuantities);
-        const updateCartItem = product.map((item, i) => {
-            if (i === index) {
-                return {
-                    ...item,
-                    product_quantity: newQuantities[index],
-                };
-            }
-            return item;
-        });
-        setCartItems(updateCartItem);
-        const totalPrice = updateCartItem.reduce((sum, item, i) => {
-            if (checkState[i] === true) {
-                return sum + item.product_price * item.product_quantity;
-            }
-            return sum;
-        }, 0);
-        setTotal(totalPrice);
-    };
-    // Check tất cả các sản phẩm | không
-    const [selectAll, setSelectAll] = useState(false);
+        await dispatch(increaseQuantity(product))
+        dispatch(fetchCart(userId));
 
-    // Multiple checkbox
-    const [checkState, setCheckState] = useState(
-        new Array(product.length).fill(false),
-    );
+    }
 
-    const handleOnChange = (position) => {
-        setDiscount(10);
+    const handleDecrease = async (productId) => {
+        const product = {
+            userId: userId,
+            productId: productId
+        }
+        await dispatch(decreaseQuantity(product))
+        dispatch(fetchCart(userId));
 
-        const updateCheckState = checkState.map((item, index) => {
-            return index === position ? !item : item;
-        });
-        setCheckState(updateCheckState);
-        const totalPrice = updateCheckState.reduce(
-            (sum, currentState, index) => {
-                if (currentState === true)
-                    return (
-                        sum +
-                        product[index].product_price *
-                            product[index].product_quantity
-                    );
-                return sum;
-            },
-            0,
-        );
-        setTotal(totalPrice);
+    }
+
+    // handle delete product from cart
+    const handleDelete = async (productId) => {
+        const product = {
+            userId: userId,
+            productId: productId
+        }
+        
+        await dispatch(removeFromCart(product))
+        dispatch(fetchCart(userId));
+        setOpen(false);
+    }
+
+    // confirm delete
+    const [open, setOpen] = useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
     };
 
-    const handleSelectAll = (e) => {
-        const checked = e.target.checked;
-        // console.log(checked);
-        if (checked) setSelectAll(!selectAll);
-        else setSelectAll(false);
+    const handleClose = () => {
+        setOpen(false);
     };
-
     return (
         <Container maxWidth="lg">
             <Stack direction={"row"} className="flex-space-between">
                 <Stack spacing={4}>
-                    <div>
-                        <FormControlLabel
-                            className="check-box"
-                            control={
-                                <Checkbox
-                                    onChange={handleSelectAll}
-                                    id="selectAll"
-                                    size="large"
-                                />
-                            }
-                            label="Select all"
-                        />
-                    </div>
-                    {product.map((i, index) => (
+                    { products ? (products.map((i, index) => (
                         <div className="cart-product">
                             <Grid container spacing={2} className="center">
                                 <Grid className="flex-row" xs={3}>
                                     <Checkbox
                                         size="large"
-                                        checked={checkState[index]}
-                                        onChange={() => handleOnChange(index)}
+                                        
                                     />
                                     <div className="image-container center">
                                         <img
                                             width={120}
                                             className="product-image"
-                                            src={i.product_image}
+                                            src={i.productId.image}
                                             alt=""
                                         />
                                     </div>
@@ -241,10 +297,10 @@ function CartBody({handleComplete }) {
                                 <Grid xs={4}>
                                     <div>
                                         <p className="h7 medium dark-title">
-                                            {i.product_name}
+                                            {i.productId.name}
                                         </p>
                                         <p className="h8 regular dark-lightest95">
-                                            {i.store_name}, {i.product_type}
+                                            {i.productId.brand}
                                         </p>
                                     </div>
                                 </Grid>
@@ -253,43 +309,61 @@ function CartBody({handleComplete }) {
                                         style={{ lineHeight: "32px" }}
                                         className="h7 medium green product-price"
                                     >
-                                        {"$" +
-                                            formatNumber(
-                                                i.product_price,
-                                                "en-US",
-                                                2,
-                                            )}
+                                        {formattedNumber(i.productId.price)}
                                     </p>
                                 </Grid>
                                 <Grid xs={2}>
                                     <Stack spacing={1} direction={"row"}>
                                         <IconButton
-                                            onClick={() =>
-                                                handleQuantityChange(index, -1)
-                                            }
+                                            onClick={() => handleDecrease(i.productId._id)}
                                         >
                                             <img src={icons.Minus} alt="" />
                                         </IconButton>
                                         <p className="h8 medium dark-title product-quantity">
-                                            {productQuantities[index]}
+                                            {i.quantity}
                                         </p>
                                         <IconButton
-                                            onClick={() =>
-                                                handleQuantityChange(index, 1)
-                                            }
+                                            onClick={() => handleIncrease(i.productId._id)}
                                         >
                                             <img src={icons.Add} alt="" />
                                         </IconButton>
                                     </Stack>
                                 </Grid>
                                 <Grid xs={1}>
-                                    <IconButton className="delete-product">
+                                    <IconButton 
+                                    onClick={handleClickOpen}
+                                     className="delete-product">
                                         <img src={icons.Trash} alt="" />
                                     </IconButton>
                                 </Grid>
                             </Grid>
+                            <>
+                    
+                            <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle className="h5 regular dark-title" id="alert-dialog-title">
+                                {"Confirm remove product?"}
+                                </DialogTitle>
+                                <DialogContent>
+                                <DialogContentText className="h7 regular dark-title" id="alert-dialog-description">
+                                    Are you sure remove {i.productId.name}?
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                <Button className="button-outlined" onClick={handleClose}>Disagree</Button>
+                                <Button className= "button-contained" onClick={() => handleDelete(i.productId._id)}>
+                                    Agree
+                                </Button>
+                                </DialogActions>
+                            </Dialog>
+                            </>
                         </div>
-                    ))}
+                    ))) : (<></>)
+                    }
                 </Stack>
                 <div>
                     <Stack spacing={3}>
@@ -314,7 +388,7 @@ function CartBody({handleComplete }) {
                                     Price
                                 </p>
                                 <p className="h7 regular dark-title">
-                                    {"$" + formatNumber(total, "en-US", 2)}
+                                    {formattedNumber(total)}
                                 </p>
                             </div>
                             <div className="flex-space-between">
@@ -322,12 +396,7 @@ function CartBody({handleComplete }) {
                                     Discount {discount}%
                                 </p>
                                 <p className="h7 regular red">
-                                    {"- $" +
-                                        formatNumber(
-                                            (total * discount) / 100,
-                                            "en-US",
-                                            2,
-                                        )}
+                                    {formattedNumber(total)}
                                 </p>
                             </div>
                             <div className="flex-space-between">
@@ -335,12 +404,7 @@ function CartBody({handleComplete }) {
                                     Total Price
                                 </p>
                                 <p className="h7 bold dark-title">
-                                    {"$" +
-                                        formatNumber(
-                                            total * (1 - discount / 100),
-                                            "en-US",
-                                            2,
-                                        )}
+                                    {formattedNumber(total * (1 - discount / 100))}
                                 </p>
                             </div>
                         </Stack>
@@ -391,7 +455,7 @@ function CartBody({handleComplete }) {
                         <p className="h8 medium dark-title">{item.name}</p>
                         <div className="flex-space-between flex-row">
                             <p className="green h8 regular">
-                                {"$" + formatNumber(item.price, "en-US", 2)}
+                                {formattedNumber(item.price)}
                             </p>
                             <div className="flex-row">
                                 <Star color="warning" />
@@ -415,19 +479,6 @@ function CartBody({handleComplete }) {
         </Container>
     );
 }
-
-
-
-function Cart() {
-    return (
-        <Container maxWidth="lg">
-            <CartHeader />
-            <CartRoute />
-        </Container>
-    );
-}
-
-export default Cart;
 
 function CartCustomerInfo({ handleBack, handleComplete }) {
     return (
@@ -940,9 +991,7 @@ function Review({ handleBack, handleComplete }) {
         </Container>
     );
 }
-{
     /* Order Summary */
-}
 export function OrderSummary({ handleBack, handleComplete }) {
     return (
         <Stack spacing={2}>
@@ -962,11 +1011,10 @@ export function OrderSummary({ handleBack, handleComplete }) {
                                 </p>
                                 <div className="flex-space-between flex-row">
                                     <p className="green h8 regular">
-                                        {"$" +
-                                            formatNumber(
-                                                item.price,
-                                                "en-US",
-                                                2,
+                                        {
+                                            formattedNumber(
+                                                item.price
+                                                
                                             )}
                                     </p>
                                     <div className="flex-row">
@@ -987,7 +1035,7 @@ export function OrderSummary({ handleBack, handleComplete }) {
                                 Subtotal
                             </p>
                             <p className="h7 regular dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
@@ -995,13 +1043,13 @@ export function OrderSummary({ handleBack, handleComplete }) {
                                 Shipping
                             </p>
                             <p className="h7 regular dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
                             <p className="h7 regular dark-lightest95">Tax 8%</p>
                             <p className="h7 regular dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
@@ -1009,13 +1057,13 @@ export function OrderSummary({ handleBack, handleComplete }) {
                                 Discount 10%
                             </p>
                             <p className="h7 regular red">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                         <div className="flex-row flex-space-between">
                             <p className="h7 medium dark-title">Order Total</p>
                             <p className="h7 medium dark-title">
-                                {"$" + formatNumber(1750, "en-US", 2)}
+                                {formattedNumber(1750)}
                             </p>
                         </div>
                     </Stack>
@@ -1034,104 +1082,4 @@ export function OrderSummary({ handleBack, handleComplete }) {
     );
 }
 
-export function CartRoute() {
-    const steps = [
-        { 
-            label: "Cart", 
-            component: (<CartBody handleComplete={() => handleComplete()} />) },
-        {
-            label: "Customer Information",
-            component: (
-                <CartCustomerInfo
-                    handleBack={() => handleBack()}
-                    handleComplete={() => handleComplete()}
-                />
-            ),
-        },
-        {
-            label: "Shipping & Payment",
-            component: (
-                <ShippingPayment
-                    handleBack={() => handleBack()}
-                    handleComplete={() => handleComplete()}
-                />
-            ),
-        },
-        {
-            label: "Review",
-            component: (
-                <Review
-                    handleBack={() => handleBack()}
-                    handleComplete={() => handleComplete()}
-                />
-            ),
-        },
-    ];
 
-    const [activeStep, setActiveStep] = React.useState(0);
-    const [completed, setCompleted] = React.useState({});
-
-    const totalSteps = () => {
-        return steps.length;
-    };
-
-    const completedSteps = () => {
-        return Object.keys(completed).length;
-    };
-
-    const isLastStep = () => {
-        return activeStep === totalSteps() - 1;
-    };
-
-    const allStepCompleted = () => {
-        return completedSteps() === totalSteps();
-    };
-
-    const handleNext = () => {
-        const newActiveStep =
-            isLastStep() && !allStepCompleted()
-                ? steps.findIndex((step, i) => !(i in completed))
-                : activeStep + 1;
-        setActiveStep(newActiveStep);
-    };
-
-    const handleBack = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleStep = (step: number) => () => {
-        setActiveStep(step);
-    };
-
-    const handleComplete = () => {
-        const newCompleted = completed;
-        newCompleted[activeStep] = true;
-        setCompleted(newCompleted);
-        handleNext();
-        console.log('Next');
-        
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-        setCompleted({});
-    };
-
-    return (
-        <Box className="cartRoute1" >
-            <Stepper className="cartRoute2" nonLinear activeStep={activeStep}>
-                {steps.map((step, index) => (
-                    <Step className="cartRoute3" completed={completed[index]}>
-                        <StepButton
-                            className="cartRoute4"
-                            onClick={handleStep(index)}
-                        >
-                            {step.label}
-                        </StepButton>
-                    </Step>
-                ))}
-            </Stepper>
-            <Box>{steps[activeStep].component}</Box>
-        </Box>
-    );
-}

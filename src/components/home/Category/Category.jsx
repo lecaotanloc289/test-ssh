@@ -1,75 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./Category.scss";
-import { Button, Container, Grid, Stack } from "@mui/material";
-import {
-    CameraAltRounded,
-    Checkroom,
-    Favorite,
-    LocalAtm,
-    PhoneAndroidRounded,
-    PhoneIphoneRounded,
-    SportsBaseball,
-    SportsEsports,
-    Tv,
-} from "@mui/icons-material";
-import { getAllCategories } from "../../../utils/appService";
-import { images } from "../../../assets/images";
-
-const items = [
-    {
-        Img: PhoneIphoneRounded,
-        Name: "Category Name",
-        View: "2,3k items",
-    },
-    {
-        Img: CameraAltRounded,
-        Name: "Category Name",
-        View: "2,3k items",
-    },
-    {
-        Img: Tv,
-        Name: "Category Name",
-        View: "2,3k items",
-    },
-    {
-        Img: Checkroom,
-        Name: "Category Name",
-        View: "2,3k items",
-    },
-    {
-        Img: SportsEsports,
-        Name: "Category Name",
-        View: "2,3k items",
-    },
-    {
-        Img: SportsBaseball,
-        Name: "Category Name",
-        View: "2,3k items",
-    },
-];
+import { Button, CardActionArea, Container, Grid, Stack } from "@mui/material";
+import { countProductByCategory } from "../../../utils/appService";
+import { useSelector } from "react-redux";
 
 const Category = () => {
-    const [categories, setCategories] = useState([]);
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await getAllCategories();
-                setCategories(
-                    response.map((category) => ({
-                        icon: category.icon,
-                        Name: category.name,
-                        Id: category._id, // Assuming you have an _id field in your Category model
-                        View: "2,3k items", // Replace with actual view count logic
-                    })),
-                );
-            } catch (err) {
-                console.error("Error fetching categories:", err);
-            }
-        };
-
-        fetchCategories();
-    }, []); 
+    const categories = useSelector((state) => state.data.categories);
+    const products = useSelector((state) => state.data.products);
 
     return (
         <Container className="category" maxWidth="lg">
@@ -81,33 +18,44 @@ const Category = () => {
                     </Button>
                 </Stack>
             </Stack>
-            <Stack className="stack2">
+            <Stack className="stack2 mg10">
                 <Grid container spacing={2}>
                     {
                         categories.map((category, index) => {
                             return (
                                 <Grid item xs={2}>
-                                    <Stack className="stack" spacing={3}>
-                                        {/* <item.Img className="icon" /> */}
-                                        <img
-                                            width={50}
-                                            src={category.icon}
-                                            alt=""
-                                        />
+                                    <CardActionArea
+                                        href={`products?category=${category._id}`}
+                                        className="flex-center"
+                                    >
+                                        <Stack className="stack3 " spacing={3}>
+                                            <img
+                                                width={50}
+                                                src={category.icon}
+                                                alt=""
+                                            />
 
-                                        <Stack className="namecnt" spacing={1}>
-                                            <p className="name ">
-                                                {category.Name}
-                                            </p>
-                                            <p className="content ">
-                                                {category.View}
-                                            </p>
+                                            <Stack
+                                                className="namecnt"
+                                                spacing={1}
+                                            >
+                                                <p className="name ">
+                                                    {category.name}
+                                                </p>
+                                                <p className="content ">
+                                                    {countProductByCategory(
+                                                        products,
+                                                        category._id,
+                                                    )}{" "}
+                                                    items
+                                                </p>
+                                            </Stack>
                                         </Stack>
-                                    </Stack>
+                                    </CardActionArea>
                                 </Grid>
                             );
                         })
-                        .slice(0, 6)
+                        // .slice(0, 6)
                     }
                 </Grid>
             </Stack>

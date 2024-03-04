@@ -79,9 +79,9 @@ hr.divider {
 .product-item {
     padding: 20px;
     position: relative;
+    margin: 0 10px;
 
     .center {
-        margin: 50px 0;
     }
 
     .favorite-button {
@@ -89,6 +89,11 @@ hr.divider {
         right: 30px;
         top: 30px;
 
+    }
+    .product-image {
+        width: 200px;
+        height: fit-content;
+        min-height: 180px;
     }
 }
 

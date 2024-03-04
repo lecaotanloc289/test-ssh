@@ -1,7 +1,7 @@
-// authReducer.js
 const initialState = {
     isAuthenticated: false,
     userData: null,
+    userDataDetail: null,
     loading: false,
     error: null,
 };
@@ -55,7 +55,7 @@ const authReducer = (state = initialState, action) => {
         case "LOAD_USER_DATA_SUCCESS":
             return {
                 ...state,
-                userData: action.payload,
+                userDataDetail: action.payload,
                 error: null,
             };
 

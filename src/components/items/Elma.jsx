@@ -1,11 +1,16 @@
 import React from "react";
 import logo from "../../assets/logo";
-import { Link } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function Elma() {
-  return (
-    <Link href="/" className="elma-logo">
-      <img src={logo.Elma} alt="" />
-    </Link>
-  );
+    const navigate = useNavigate();
+    return (
+        <a
+            style={{ cursor: "pointer" }}
+            onClick={() => navigate("/")}
+            className="elma-logo"
+        >
+            <img src={logo.Elma} alt="" />
+        </a>
+    );
 }

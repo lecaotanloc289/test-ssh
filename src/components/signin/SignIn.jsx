@@ -17,12 +17,14 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { Close, Google } from "@mui/icons-material";
+import { Close, Google, Troubleshoot } from "@mui/icons-material";
 import logo from "../../assets/logo";
 import axios from "axios";
 import { API_PUBLIC_URL } from "../../utils/config";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAndLoadUserData } from "../../redux/actions/signInAction";
+import MainLayout from "../MainLayout";
+import { useNavigate, useHref } from "react-router-dom";
 
 var userId;
 const loadUserData = async () => {
@@ -38,30 +40,23 @@ const loadUserData = async () => {
 }
 export default function SignIn() {
     const isAuthenticated= useSelector(state => state.auth.isAuthenticated);
-
-    const auth = useSelector((state) => state.auth);
+    const navigate = useNavigate()
+    
     const [email, setEmail] = useState("");
     const [password_hash, setPassword] = useState("");
     const [signInSuccess, setSignInSuccess] = useState(false);
     const [openSnackBar, setOpenSnackBar] = React.useState(false);
     const [notify, setNotify] = useState("");
-
-    const handleClick = () => {
-        setOpenSnackBar(true);
-      };
+    const dispatch = useDispatch()
     
-      const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+    const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
           return;
         }
-    
-        setOpenSnackBar(false);
-      };
-      if(auth.user) {
-        setNotify('Register successful!');
-        setSignInSuccess(false);
-        setOpenSnackBar(true);
-        return;
+    }
+        
+    if(isAuthenticated) {
+        navigate("/")
     }
     
     const handleSignIn = async () => {
@@ -83,31 +78,14 @@ export default function SignIn() {
             setOpenSnackBar(true);
             return;
         }
-        
-        try {
-            const res = await axios.post( `${API_PUBLIC_URL}users/signin`, {
+        dispatch(
+            signInAndLoadUserData({
                 email: email,
                 password_hash: password_hash,
-                });
-                setSignInSuccess(true);
-                setOpenSnackBar(true);
-                userId = res.data.user_id;
-                setNotify(res.data.message);
-                localStorage.setItem('userData', JSON.stringify(res.data))
-                localStorage.setItem('isAuthenticated', 'true')
+            })
+        );
+    };
 
-                // Redirect to the homepage
-                window.location.href = '/'
-        }   
-        catch (error) {
-            // Server response for failure
-            setSignInSuccess(false);
-            setOpenSnackBar(true)
-            setNotify(error.response);
-            console.log(error);
-          }
-        
-    }
     const action = (
         <React.Fragment>
           <IconButton
@@ -121,15 +99,9 @@ export default function SignIn() {
         </React.Fragment>
       );
 
-    const handleEmailChange = (e) => {
-        setEmail(e.target.value);
-    };
-
-    const handlePasswordChange = (e) => {
-        setPassword(e.target.value);
-    };
+    
     return (
-        <>
+        <MainLayout>
             
             {<Snackbar
                 open={openSnackBar}
@@ -192,7 +164,7 @@ export default function SignIn() {
                                             type="email"
                                             name="email"
                                             placeholder="Enter your email"
-                                            onChange={handleEmailChange
+                                            onChange={(e) => setEmail(e.target.value)
                                             }
                                             value={email}
                                         ></TextField>
@@ -221,14 +193,14 @@ export default function SignIn() {
                                             type="password"
                                             name="password"
                                             placeholder="Enter your password"
-                                            onChange={handlePasswordChange
+                                            onChange={(e) => setPassword(e.target.value)
                                             }
 
                                         ></TextField>
                                     </Stack>
 
                                     <Button
-                                        onClick={(e) => handleSignIn(e)}
+                                        onClick={handleSignIn}
                                         className="mg40 signin-button radius-8"
                                         fullWidth
                                         variant="contained"
@@ -247,6 +219,6 @@ export default function SignIn() {
                     ></CardActionArea>
                 </Container>
             </div>
-        </>
+        </MainLayout>
     );
 }

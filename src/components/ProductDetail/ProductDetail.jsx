@@ -1,24 +1,49 @@
-import { Container, Stack } from '@mui/material'
-import React from 'react'
-import CardProduct from './CardProduct/CardProduct'
-import TabProduct from './TabProduct/TabProduct'
-import { Description } from '@mui/icons-material'
-import Descriptions from './Descriptions/Descriptions'
-import Review from './Review/Review'
-import Comment from './Comment/Comment'
-import RealatedProduct from './RealatedProduct/RealatedProduct'
+import React, { useEffect, useState } from "react";
+import CardProduct from "./CardProduct/CardProduct";
+import TabProduct from "./TabProduct/TabProduct";
+import Descriptions from "./Descriptions/Descriptions";
+import Review from "./Review/Review";
+import Comment from "./Comment/Comment";
+import RealatedProduct from "./RealatedProduct/RealatedProduct";
+import { getIdFromUrl } from "../../utils/appService";
+import axios from "axios";
+import { API_PUBLIC_URL } from "../../utils/config";
+import { Skeleton } from "@mui/material";
+import MainLayout from "../MainLayout";
 
 const ProductDetail = () => {
-  return (
-    <div>
-        <CardProduct/>
-        <TabProduct/>
-        <Descriptions/>
-        <Review/>
-        <Comment/>
-        <RealatedProduct/>
-    </div>
-  )
-}
+    const [data, setProductData] = useState(null);
 
-export default ProductDetail
+    useEffect(() => {
+        const id = getIdFromUrl();
+        const getProductDetail = async (id) => {
+            try {
+                const res = await axios.get(`${API_PUBLIC_URL}products/${id}`);
+                setProductData(res.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getProductDetail(id);
+    }, []);
+    // const data = productData;
+    return (
+        <MainLayout>
+            {data ? (
+                <div>
+                    <CardProduct data={data} />
+                    <TabProduct />
+                    <Descriptions data={data} />
+                    <Review data={data} />
+                    <Comment />
+                    <RealatedProduct data={data} />
+                </div>
+            ) : (
+                <Skeleton variant="rounded" animation="pulse" width={1000} />
+            )}
+        </MainLayout>
+    );
+};
+
+export default ProductDetail;

@@ -1,5 +1,4 @@
 import {
-    Avatar,
     Button,
     ButtonGroup,
     Card,
@@ -10,59 +9,38 @@ import {
     FormControlLabel,
     FormGroup,
     Grid,
-    IconButton,
-    InputLabel,
     MenuItem,
     Pagination,
     Select,
     Stack,
-    TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { ElmaBreadCrumbs } from "../categories/Categories";
 import icons from "../../assets/icons";
-import {
-    Favorite,
-    FavoriteBorderRounded,
-    Grid4x4Rounded,
-    GridOnRounded,
-    ProductionQuantityLimits,
-    Star,
-    StarBorderRounded,
-    StarRate,
-} from "@mui/icons-material";
+import { ShoppingCart, StarRate } from "@mui/icons-material";
 import "./Search.scss";
 import { images } from "../../assets/images";
 import logo from "../../assets/logo";
-import CircleIcon from "../items/CircleIcon";
-import { getAllCategories } from "../../utils/appService";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchSearchResults } from "../../redux/actions/searchAcion";
-
-export function formatNumber(number, locale, minimumFractionDigits) {
-    if (locale === undefined) locale = "vi-VN";
-    if (minimumFractionDigits === undefined) minimumFractionDigits = 2;
-
-    return Intl.NumberFormat(locale, {
-        minimumFractionDigits: minimumFractionDigits,
-    }).format(number);
-}
-
+import { formattedNumber } from "../../utils/appService";
+import { useSelector } from "react-redux";
+import MainLayout from "../MainLayout";
 function Search() {
     return (
-        <Container maxWidth="lg">
-            <Search1 />
-            <Divider className="divider" />
-            <Search2 />
-            <div className="flex-center">
-                <Pagination
-                    size="large"
-                    count={10}
-                    variant="outlined"
-                    shape="rounded"
-                />
-            </div>
-        </Container>
+        <MainLayout>
+            <Container maxWidth="lg">
+                <Search1 />
+                <Divider className="divider" />
+                <Search2 />
+                <div className="flex-center">
+                    <Pagination
+                        size="large"
+                        count={10}
+                        variant="outlined"
+                        shape="rounded"
+                    />
+                </div>
+            </Container>
+        </MainLayout>
     );
 }
 
@@ -83,7 +61,7 @@ export function Search1() {
                     >
                         <img src={icons.Grid} alt="" />
                     </Button>
-                    <Button className="button44" variant="none">
+                    <Button className="button44">
                         <img color="white" src={icons.List} alt="" />
                     </Button>
                 </ButtonGroup>
@@ -116,92 +94,25 @@ export function Search2() {
 }
 
 export function FilterOptions() {
-    const category = [
-        {
-            icon: icons.HeadPhones,
-            title: "Category 01",
-        },
-        {
-            icon: icons.Computer,
-            title: "Item Category 01",
-        },
-        {
-            icon: icons.Phone,
-            title: "Category list 03",
-        },
-        {
-            icon: icons.Healthy,
-            title: "Category 04",
-        },
-        {
-            icon: icons.Camera,
-            title: "Item Category 05",
-        },
-        {
-            icon: icons.MensFashion,
-            title: "Category list 06",
-        },
-        {
-            icon: icons.Add,
-            title: "See all categories",
-        },
-    ];
-
     const popular_filter = [
-        {
-            label: "4 star or upper",
-        },
-        {
-            label: "Same day delivery",
-        },
-        {
-            label: "Super seller",
-        },
-        {
-            label: "Sale Product",
-        },
+        { id: 1, label: "4 star or upper" },
+        { id: 2, label: "Same day delivery" },
+        { id: 3, label: "Super seller" },
+        { id: 4, label: "Sale Product" },
     ];
 
     const price_value = [
-        {
-            value: "0 - 150",
-        },
-        {
-            value: "150 - 300",
-        },
-        {
-            value: "300 - 500",
-        },
-        {
-            value: "500 - 1k",
-        },
+        { id: 1, value: "0 - 150" },
+        { id: 2, value: "150 - 300" },
+        { id: 3, value: "300 - 500" },
+        { id: 4, value: "500 - 1k" },
     ];
-    const [categories, setCategories] = useState([]);
-    useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await getAllCategories();
-                setCategories(
-                    response.map((category) => ({
-                        icon: category.icon,
-                        Name: category.name,
-                        Id: category._id, // Assuming you have an _id field in your Category model
-                        View: "2,3k items", // Replace with actual view count logic
-                    })),
-                );
-            } catch (err) {
-                console.error("Error fetching categories:", err);
-            }
-        };
+    const categories = useSelector((state) => {
+        return state.data.categories;
+    });
 
-        fetchCategories();
-    }, []);
     return (
-        <Card
-            className="radius-8 filter-options"
-            orientation="vertical"
-            variant="outlined"
-        >
+        <Card className="radius-8 filter-options" variant="outlined">
             <Stack spacing={2}>
                 <Stack>
                     <p className="h5 medium dark-title mgt4">Filter Options</p>
@@ -225,7 +136,7 @@ export function FilterOptions() {
                     <p className="h7 medium dark-title mgt4">Category</p>
                     {categories.map((item, index) => (
                         <a
-                            href={`categories/${item.Id}`}
+                            href={`categories/${item._id}`}
                             style={{
                                 cursor: "pointer",
                                 textDecoration: "none",
@@ -250,7 +161,7 @@ export function FilterOptions() {
                                         />{" "}
                                     </div>
                                     <p className="h7 regular dark-lighter5a mgt4">
-                                        {item.Name}
+                                        {item.name}
                                     </p>
                                 </Stack>
                                 <img
@@ -311,10 +222,10 @@ export function Result() {
     return (
         <Container className="">
             <div className="flex-space-between center mg-16-0">
-                <p className="h7 regular dark-lighter5a">
-                    Show 1 - 20 item form 500 total for `
+                {/* <p className="h7 regular dark-lighter5a">
+                    Show 1 - 20 item from 500 total for `
                     {localStorage.getItem("searchValue")}`
-                </p>
+                </p> */}
                 <Stack
                     direction={"row"}
                     spacing={2}
@@ -430,14 +341,14 @@ export function Store() {
             rating: 4.6,
         },
     ];
-    
+
     // call product for search
     const searchResults = useSelector((state) => state.search.searchResults);
-    console.log(searchResults);
-    
+    const handleAddToCard = () => {};
     return (
         <Grid container spacing={2}>
-            {store.map((item, index) => (
+            <div>
+                {/* {store.map((item, index) => (
                 <Card variant="outlined" className="Store">
                     <Stack spacing={3} className="store">
                         <img width={64} src={item.logo} alt="" />
@@ -543,12 +454,16 @@ export function Store() {
                         </Stack>
                     </Card>
                 </Grid>
-            ))}
+            ))} */}
+            </div>
 
             <Grid rowSpacing={3} container flexWrap={"wrap"}>
-                {products.map((i, ind) => (
+                {searchResults.map((i, ind) => (
                     <Grid item xs={4}>
-                        <Card className="non-box-shadow radius-12  product-item">
+                        <Card
+                            variant="outlined"
+                            className="non-box-shadow radius-12  product-item"
+                        >
                             <Stack spacing={2}>
                                 <button
                                     style={{ backgroundColor: "white" }}
@@ -560,8 +475,7 @@ export function Store() {
                                 </button>
                                 <Stack spacing={2} className="center">
                                     <img
-                                        width={200}
-                                        height={114}
+                                        className="product-image"
                                         src={i.image}
                                         alt=""
                                     />
@@ -571,28 +485,32 @@ export function Store() {
                                     className="flex-space-between"
                                 >
                                     <p className="green h7 medium">
-                                        ${formatNumber(i.price, "en-US", 2)}
+                                        {formattedNumber(i.price)}
                                     </p>
 
                                     <div className="csale">
                                         <p className="sale h9">SALE</p>
                                     </div>
                                 </Stack>
-                                <p className="h6 medium dark-title product-name">
+                                <p className="h6 medium dark-title product-name text-ellipsis">
                                     {i.name}
                                 </p>
                                 <Stack
                                     direction={"row"}
                                     className="flex-space-between"
                                 >
-                                    <Stack direction={"row"} className="">
+                                    <Stack
+                                        spacing={1}
+                                        direction={"row"}
+                                        className=""
+                                    >
                                         <img
                                             height={16}
                                             src={icons.Store}
                                             alt=""
                                         />
                                         <p className="h9 regular dark-lighter5a">
-                                            {i.name_store}
+                                            {i.brand}
                                         </p>
                                     </Stack>
                                     <Stack direction={"row"}>
@@ -605,6 +523,16 @@ export function Store() {
                                         </p>
                                     </Stack>
                                 </Stack>
+                                <Button
+                                    className="button-contained"
+                                    variant="contained"
+                                    onClick={handleAddToCard}
+                                >
+                                    <p className="normal h7 medium white">
+                                        <ShoppingCart className="icon" />
+                                        Add to cart
+                                    </p>
+                                </Button>
                             </Stack>
                         </Card>
                     </Grid>
@@ -613,4 +541,11 @@ export function Store() {
         </Grid>
     );
 }
+
+// const mapStateToProps = (state) => {
+//     return {
+//         categories: state.data.categories,
+//     };
+// };
+// connect(mapStateToProps)
 export default Search;

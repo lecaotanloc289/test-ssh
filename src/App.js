@@ -18,7 +18,6 @@ function App() {
     return (
         <Provider store={store}>
             <Router>
-                <Header />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/signin" element={<SignIn />} />
@@ -34,7 +33,6 @@ function App() {
                     <Route path="/ordertracking" element={<OrderTracking />} />
                     <Route path="/productdetails" element={<ProductDetail />} />
                 </Routes>
-                <Footer />
             </Router>
         </Provider>
     );

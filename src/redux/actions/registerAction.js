@@ -17,7 +17,6 @@ export const registerUser = (userData) => {
     return async (dispatch) => {
         dispatch(registerRequest());
         const api = `${API_PUBLIC_URL}users/`;
-        // console.log(userData);
         try {
             const res = await axios.post(api, userData);
             dispatch(registerSuccess(res.data));
